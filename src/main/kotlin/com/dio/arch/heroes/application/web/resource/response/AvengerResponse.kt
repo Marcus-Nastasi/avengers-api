@@ -1,4 +1,4 @@
-package com.dio.arch.heroes.application.web.response
+package com.dio.arch.heroes.application.web.resource.response
 
 import org.hibernate.validator.constraints.UUID
 
