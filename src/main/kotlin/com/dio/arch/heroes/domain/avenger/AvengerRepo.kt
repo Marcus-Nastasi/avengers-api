@@ -1,6 +1,7 @@
 package com.dio.arch.heroes.domain.avenger
 
 import org.hibernate.validator.constraints.UUID
+import org.springframework.stereotype.Repository
 
 interface AvengerRepo {
     fun getDetail(id: UUID): Avenger
