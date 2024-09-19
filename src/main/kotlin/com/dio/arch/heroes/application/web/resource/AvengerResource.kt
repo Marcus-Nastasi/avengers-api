@@ -7,6 +7,7 @@ import jakarta.validation.Valid
 import org.hibernate.validator.constraints.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -56,5 +57,11 @@ class AvengerResource(
                 ResponseEntity.ok().body(AvengerResponse.from(a))
             }
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    fun deleteAvenger(@PathVariable("id") id: UUID): ResponseEntity<AvengerResponse> {
+        return repository.delete(id)
+            .let { ResponseEntity.ok(AvengerResponse.from(it)) };
     }
 }
