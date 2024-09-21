@@ -41,7 +41,9 @@ class AvengerResource(
         return request.toAvenger()
             .run { repository.create(this) }
             .let {
-                ResponseEntity.created(URI("$API_PATH/${it.id}")).body(AvengerResponse.from(it))
+                ResponseEntity
+                    .created(URI("$API_PATH/${it.id}"))
+                    .body(AvengerResponse.from(it))
             }
     }
 
