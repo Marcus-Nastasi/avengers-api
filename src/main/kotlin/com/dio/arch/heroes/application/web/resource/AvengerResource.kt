@@ -2,9 +2,9 @@ package com.dio.arch.heroes.application.web.resource
 
 import com.dio.arch.heroes.application.web.resource.request.AvengerRequest
 import com.dio.arch.heroes.application.web.resource.response.AvengerResponse
+import com.dio.arch.heroes.domain.avenger.Avenger
 import com.dio.arch.heroes.domain.avenger.AvengerRepo
 import jakarta.validation.Valid
-import org.hibernate.validator.constraints.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
+import java.util.UUID
 
 private const val API_PATH = "/v1/api/avenger";
 
@@ -33,7 +34,9 @@ class AvengerResource(
 
     @GetMapping("{id}")
     fun getAvengerDetail(@PathVariable("id") id: UUID): ResponseEntity<AvengerResponse> {
-        return ResponseEntity.ok(AvengerResponse.from(repository.getDetail(id)));
+        val avenger: Avenger = repository.getDetail(id)
+            ?: return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(AvengerResponse.from(avenger));
     }
 
     @PostMapping("/register")
@@ -49,21 +52,24 @@ class AvengerResource(
 
     @PatchMapping("/update/{id}")
     fun updateAvenger(
-            @PathVariable("id") id: UUID,
-            @Valid @RequestBody request: AvengerRequest
+        @PathVariable("id") id: UUID,
+        @Valid @RequestBody request: AvengerRequest
     ): ResponseEntity<AvengerResponse> {
-        return repository.getDetail(id).let {
+        return repository.getDetail(id)?.let {
             AvengerRequest.to(it.id, request).apply {
                 repository.update(this)
             }.let { a ->
                 ResponseEntity.ok().body(AvengerResponse.from(a))
             }
-        }
+        } ?: ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/delete/{id}")
-    fun deleteAvenger(@PathVariable("id") id: UUID): ResponseEntity<AvengerResponse> {
-        return repository.delete(id)
-            .let { ResponseEntity.ok(AvengerResponse.from(it)) };
+    fun deleteAvenger(
+        @PathVariable("id") id: UUID
+    ): ResponseEntity<AvengerResponse> {
+        val avenger: Avenger = repository.delete(id)
+            ?: return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(AvengerResponse.from(avenger));
     }
 }

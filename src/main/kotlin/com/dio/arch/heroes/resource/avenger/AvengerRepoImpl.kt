@@ -2,10 +2,10 @@ package com.dio.arch.heroes.resource.avenger
 
 import com.dio.arch.heroes.domain.avenger.Avenger
 import com.dio.arch.heroes.domain.avenger.AvengerRepo
-import org.hibernate.validator.constraints.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import java.util.UUID
 
 @Component
 class AvengerRepoImpl(

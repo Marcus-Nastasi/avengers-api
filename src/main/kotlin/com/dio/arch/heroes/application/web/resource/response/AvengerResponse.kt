@@ -1,7 +1,7 @@
 package com.dio.arch.heroes.application.web.resource.response
 
 import com.dio.arch.heroes.domain.avenger.Avenger
-import org.hibernate.validator.constraints.UUID
+import java.util.UUID
 
 data class AvengerResponse(
     val id: UUID? = null,
