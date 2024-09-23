@@ -40,7 +40,9 @@ class AvengerResource(
     }
 
     @PostMapping("/register")
-    fun createAvenger(@Valid @RequestBody request: AvengerRequest): ResponseEntity<AvengerResponse> {
+    fun createAvenger(
+        @Valid @RequestBody request: AvengerRequest
+    ): ResponseEntity<AvengerResponse> {
         return request.toAvenger()
             .run { repository.create(this) }
             .let {
