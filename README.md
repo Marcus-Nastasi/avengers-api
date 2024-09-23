@@ -1,11 +1,11 @@
-# Avengers API - LiveCode DIO - 01/04/2021
+# Avengers API
 
 Desenvolvimento de uma API utilizando SpringBoot + Kotlin com o intuito de cadastro de Vingadores.
 
 ## Tecnologias / Frameworks / IDE
 
 - Intellij
-- SpringBoot 2.4.4
+- SpringBoot 3
 - Maven
 - Kotlin
 - SpringData JPA
@@ -69,15 +69,7 @@ alter table avenger add constraint UK_5r88eemotwgru6k0ilqb2ledh unique (nick);
 ```yaml
 spring:
   application:
-    name: avengers
-  config:
-    # This configuration allow use profiles as spring 2.3.x version
-    # In spring 2.4.x version, has changed to:
-    # spring:
-    #  profiles:
-    #    group:
-    #      <group>: dev, auth
-    use-legacy-processing: true
+    name: heroes
   profiles:
     active: dev
   jmx:
@@ -99,8 +91,8 @@ spring:
     hibernate:
       ddl-auto: none
       naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
   main:
     allow-bean-definition-overriding: true
   task:
@@ -124,24 +116,24 @@ server:
     session:
       cookie:
         http-only: true
-    context-path: /avengers
+    context-path: /
 ```
 
 ```yaml
 spring:
-  profiles:
-    active: dev
   jackson:
     serialization:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:25433/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/avengers
+    username: postgres
+    password: 123
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+    hibernate:
+      ddl_auto: update
 ```
 
 ```yaml
@@ -166,9 +158,11 @@ spring:
 ### Environment Config
 
 ```sh 
-DB_USER=dio.avenger
-DB_PASSWORD=dio.avenger
+DB_USER=postgres
 DB_NAME=avengers
+DB_PASSWORD=123
+PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
+PGADMIN_DEFAULT_PASSWORD=admin
 ```
 
 ### YAML (backend-services.yaml)
@@ -184,17 +178,17 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       ALLOW_IP_RANGE: 0.0.0.0/0
     ports:
-      - "25433:5432"
+      - "5432:5432"
     volumes:
       - pdb12:/var/lib/postgresql/data
     networks:
       - postgres-compose-network
 
-  teste-pgadmin-compose:
+  pgadmin-avenger:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: "avengers@email.com"
-      PGADMIN_DEFAULT_PASSWORD: "123456"
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "5556:80"
     depends_on:
