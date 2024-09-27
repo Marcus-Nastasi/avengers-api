@@ -33,7 +33,9 @@ class AvengerResource(
     }
 
     @GetMapping("{id}")
-    fun getAvengerDetail(@PathVariable("id") id: UUID): ResponseEntity<AvengerResponse> {
+    fun getAvengerDetail(
+        @PathVariable("id") id: UUID
+    ): ResponseEntity<AvengerResponse> {
         val avenger: Avenger = repository.getDetail(id)
             ?: return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(AvengerResponse.from(avenger));

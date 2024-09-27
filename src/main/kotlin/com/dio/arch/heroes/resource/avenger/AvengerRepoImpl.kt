@@ -25,13 +25,12 @@ class AvengerRepoImpl(
     }
 
     override fun update(avenger: Avenger): Avenger? {
-        if (avenger.id == null) return null;
-        val avengerFound: Avenger = repo.findById(avenger.id).orElseThrow().toAvenger();
+        val avengerFound: Avenger = repo.findByIdOrNull(avenger.id)?.toAvenger() ?: return null;
         return repo.save(AvengerEntity.from(avengerFound)).toAvenger();
     }
 
     override fun delete(id: UUID): Avenger? {
-        val avenger: Avenger? = repo.findByIdOrNull(id)?.toAvenger();
+        val avenger: Avenger = repo.findByIdOrNull(id)?.toAvenger()?: return null;
         repo.deleteById(id);
         return avenger;
     }
